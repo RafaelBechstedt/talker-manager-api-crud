@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const { readTalker } = require('./utils/fsUtils');
 
 const app = express();
@@ -6,6 +7,10 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+function generateToken() {
+  return crypto.randomBytes(8).toString('hex');
+}
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -31,4 +36,9 @@ if (!talkerFound) {
 } else {
   res.status(200).json(talkerFound);
 }
+});
+
+app.post('/login', (req, res) => {
+  const token = generateToken();
+  return res.status(HTTP_OK_STATUS).json({ token });
 });
