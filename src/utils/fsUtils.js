@@ -14,7 +14,7 @@ async function writeNewTalker(newTalker) {
   try {
     const oldTalkers = await readTalker();
     const allTalkers = [...oldTalkers, newTalker];
-    const data = await fs.writeFile('./src/talker.json', allTalkers);
+    const data = await fs.writeFile('./src/talker.json', JSON.stringify(allTalkers));
     return data;
   } catch (err) {
     console.error(`Erro ao escrever o arquivo: ${err.message}`);

@@ -2,6 +2,12 @@ const express = require('express');
 const crypto = require('crypto');
 const { readTalker, writeNewTalker } = require('./utils/fsUtils');
 const validateLogin = require('./middlewares/validateLogin');
+const validateAge = require('./middlewares/validateAge');
+const validateToken = require('./middlewares/validateToken');
+const validateTalk = require('./middlewares/validateTalk');
+const validateName = require('./middlewares/validateName');
+const validateRate = require('./middlewares/validateRate');
+const validateWatchedAt = require('./middlewares/validateWatchedAt');
 
 const app = express();
 app.use(express.json());
@@ -44,12 +50,13 @@ app.post('/login', validateLogin, (req, res) => {
   return res.status(HTTP_OK_STATUS).json({ token });
 });
 
-app.post('/talker', async (req, res) => {
+app.post('/talker', validateToken, validateName, validateAge,
+validateTalk, validateWatchedAt, validateRate, async (req, res) => {
   const oldTalkers = await readTalker();
   const newTalker = {
     id: oldTalkers.length + 1,
     ...req.body,
   };
   await writeNewTalker(newTalker);
-  return res.status(HTTP_OK_STATUS).json(newTalker);
+  return res.status(201).json(newTalker);
 });
