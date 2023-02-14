@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { readTalker } = require('./utils/fsUtils');
+const { readTalker, writeNewTalker } = require('./utils/fsUtils');
 const validateLogin = require('./middlewares/validateLogin');
 
 const app = express();
@@ -42,4 +42,14 @@ if (!talkerFound) {
 app.post('/login', validateLogin, (req, res) => {
   const token = generateToken();
   return res.status(HTTP_OK_STATUS).json({ token });
+});
+
+app.post('/talker', async (req, res) => {
+  const oldTalkers = await readTalker();
+  const newTalker = {
+    id: oldTalkers.length + 1,
+    ...req.body,
+  };
+  await writeNewTalker(newTalker);
+  return res.status(HTTP_OK_STATUS).json(newTalker);
 });
