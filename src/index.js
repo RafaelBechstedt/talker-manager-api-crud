@@ -71,3 +71,12 @@ validateTalk, validateWatchedAt, validateRate, async (req, res) => {
   editTalkers(talkers);
   return res.status(200).json(talkers[index]);
 });
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readTalker();
+
+  const filteredTalkers = talkers.filter((element) => element.id !== Number(id));
+  editTalkers(filteredTalkers);
+  return res.status(204).end();
+});
