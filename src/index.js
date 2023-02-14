@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { readTalker, writeNewTalker } = require('./utils/fsUtils');
+const { readTalker, writeNewTalker, editTalkers } = require('./utils/fsUtils');
 const validateLogin = require('./middlewares/validateLogin');
 const validateAge = require('./middlewares/validateAge');
 const validateToken = require('./middlewares/validateToken');
@@ -59,4 +59,16 @@ validateTalk, validateWatchedAt, validateRate, async (req, res) => {
   };
   await writeNewTalker(newTalker);
   return res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id', validateToken, validateName, validateAge, 
+validateTalk, validateWatchedAt, validateRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await readTalker();
+  const index = talkers.findIndex((talker) => talker.id === Number(id));
+  talkers[index] = { id: Number(id), name, age, talk };
+  const updatedTalkers = JSON.stringify(talkers);
+  editTalkers(updatedTalkers);
+  return res.status(200).json(talkers[index]);
 });
