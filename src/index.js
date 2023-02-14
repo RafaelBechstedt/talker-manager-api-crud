@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { readTalker } = require('./utils/fsUtils');
+const validateLogin = require('./middlewares/validateLogin');
 
 const app = express();
 app.use(express.json());
@@ -38,7 +39,7 @@ if (!talkerFound) {
 }
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', validateLogin, (req, res) => {
   const token = generateToken();
   return res.status(HTTP_OK_STATUS).json({ token });
 });
