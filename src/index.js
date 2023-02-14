@@ -68,7 +68,6 @@ validateTalk, validateWatchedAt, validateRate, async (req, res) => {
   const talkers = await readTalker();
   const index = talkers.findIndex((talker) => talker.id === Number(id));
   talkers[index] = { id: Number(id), name, age, talk };
-  const updatedTalkers = JSON.stringify(talkers);
-  editTalkers(updatedTalkers);
+  editTalkers(talkers);
   return res.status(200).json(talkers[index]);
 });

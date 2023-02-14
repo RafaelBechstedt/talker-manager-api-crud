@@ -24,7 +24,7 @@ async function writeNewTalker(newTalker) {
 async function editTalkers(talkerToEdit) {
   try {
     // Ja foi dado o stringfy no index
-    await fs.writeFile('./src/talker.json', talkerToEdit);
+    await fs.writeFile('./src/talker.json', JSON.stringify(talkerToEdit));
   } catch (err) {
     console.error(`Erro ao escrever o arquivo: ${err.message}`);
   }
