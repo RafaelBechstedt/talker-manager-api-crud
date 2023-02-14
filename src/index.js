@@ -76,7 +76,7 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   const talkers = await readTalker();
 
-  const filteredTalkers = talkers.filter((element) => element.id !== Number(id));
-  editTalkers(filteredTalkers);
+  const talkerToBeDeleted = talkers.filter((talker) => talker.id !== Number(id));
+  editTalkers(talkerToBeDeleted);
   return res.status(204).end();
 });
