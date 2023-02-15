@@ -33,6 +33,17 @@ app.get('/talker', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readTalker();
+
+  if (!q || q.length === 0) {
+    return res.status(HTTP_OK_STATUS).json(talkers);
+  }
+  const talkersFound = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(HTTP_OK_STATUS).json(talkersFound);
+});
+
 app.get('/talker/:id', async (req, res) => {
 const { id } = req.params;
 const talkers = await readTalker();
@@ -41,7 +52,7 @@ const talkerFound = talkers.find((talker) => talker.id === Number(id));
 if (!talkerFound) {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 } else {
-  res.status(200).json(talkerFound);
+  res.status(HTTP_OK_STATUS).json(talkerFound);
 }
 });
 
@@ -69,7 +80,7 @@ validateTalk, validateWatchedAt, validateRate, async (req, res) => {
   const index = talkers.findIndex((talker) => talker.id === Number(id));
   talkers[index] = { id: Number(id), name, age, talk };
   editTalkers(talkers);
-  return res.status(200).json(talkers[index]);
+  return res.status(HTTP_OK_STATUS).json(talkers[index]);
 });
 
 app.delete('/talker/:id', validateToken, async (req, res) => {
